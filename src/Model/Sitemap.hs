@@ -21,4 +21,4 @@ sitemap :: Router () (Sitemap :- ())
 sitemap =
     rHome <>
     rOverview . "items" <>
-    rDetails . "item" </> rId . int
+    rDetails . "item" </> rId . integer

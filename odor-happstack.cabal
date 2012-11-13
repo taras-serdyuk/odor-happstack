@@ -10,9 +10,11 @@ executable odor-happstack
   build-depends:
     base >= 4,
     blaze-html,
+    blaze-markup,
     boomerang,
     hamlet,
     happstack-server,
+    ixset,
     text,
     web-routes,
     web-routes-boomerang,
@@ -22,5 +24,6 @@ executable odor-happstack
                    Model.Item,
                    Model.Sitemap,
                    Control.Util,
-                   Control.Application
+                   Control.Application,
+                   Model.Sample
 

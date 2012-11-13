@@ -1,1 +1,3 @@
-<h3>Details
+<p>#{getName item}
+<p>#{show $ getStatus item}
+<p>#{getDesc item}
