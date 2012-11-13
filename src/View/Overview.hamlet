@@ -1,0 +1,4 @@
+<ol>
+  $forall Item itemId name _ _ <- items
+    <li>
+      <a href=@{Details itemId}>#{unName name}

@@ -1,0 +1,26 @@
+name:           odor-happstack
+version:        0.1
+cabal-version:  >= 1.2
+build-type:     Simple
+author:         Taras Serdyuk
+
+executable odor-happstack
+  hs-source-dirs:  src
+  main-is:         Main.hs
+  build-depends:
+    base >= 4,
+    blaze-html,
+    boomerang,
+    hamlet,
+    happstack-server,
+    text,
+    web-routes,
+    web-routes-boomerang,
+    web-routes-happstack
+  ghc-options:     -Wall
+  other-modules:   
+                   Model.Item,
+                   Model.Sitemap,
+                   Control.Util,
+                   Control.Application
+
