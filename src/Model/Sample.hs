@@ -2,12 +2,13 @@
 
 module Model.Sample where
 
+import Model.IdSet
 import Model.Item
 
 
-sampleItems :: [Item]
-sampleItems = [
-    Item (Id 1) (Name "Item A") Free (Desc "Some description."),
-    Item (Id 2) (Name "Item B") Free (Desc "Some description."),
-    Item (Id 3) (Name "Item C") Free (Desc "Some description."),
-    Item (Id 4) (Name "Item D") Booked (Desc "Some description.")]
+itemSet :: IdSet Item ItemId
+itemSet = foldr put (empty (Id 0)) [
+    Item (Name "Item A") Free (Desc "Some description."),
+    Item (Name "Item B") Free (Desc "Some description."),
+    Item (Name "Item C") Free (Desc "Some description."),
+    Item (Name "Item D") Booked (Desc "Some description.")]

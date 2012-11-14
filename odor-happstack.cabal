@@ -25,5 +25,6 @@ executable odor-happstack
                    Model.Sitemap,
                    Control.Util,
                    Control.Application,
-                   Model.Sample
+                   Model.Sample,
+                   Model.IdSet
 

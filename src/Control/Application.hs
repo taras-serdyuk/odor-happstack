@@ -4,11 +4,11 @@
 
 module Control.Application where
 
-import Data.IxSet
 import Data.Text
 import Control.Monad
 import Control.Util
 import Happstack.Server
+import Model.IdSet
 import Model.Item
 import Model.Sample
 import Model.Sitemap
@@ -25,24 +25,22 @@ launch = simpleHTTP nullConf $
     msum [site sitemap router, notFoundPage]
 
 
-itemSet :: IxSet Item
-itemSet = fromList sampleItems
-
 router :: Sitemap -> Route Response
 router url = renderUrlM >>= case url of
     Home -> homePage
-    Overview -> overviewPage sampleItems
+    Overview -> overviewPage
     Details itemId -> detailsPage itemId
 
 
 homePage :: RouteHandler
 homePage url = ok $ page "Home" ($(hamletFile (template "Home")) url)
 
-overviewPage :: [Item] -> RouteHandler
-overviewPage items url = ok $ page "All Items" ($(hamletFile (template "Overview")) url)
+overviewPage :: RouteHandler
+overviewPage url = ok $ page "All Items" ($(hamletFile (template "Overview")) url)
+    where items = toList (ixSet itemSet)
 
 detailsPage :: ItemId -> RouteHandler
-detailsPage itemId url = case getOne (itemSet @= itemId) of
+detailsPage itemId url = case get itemId itemSet of
     Just item -> ok $ page "Item Details" ($(hamletFile (template "Details")) url)
     Nothing -> notFoundPage
 
