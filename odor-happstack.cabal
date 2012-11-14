@@ -8,6 +8,7 @@ executable odor-happstack
   hs-source-dirs:  src
   main-is:         Main.hs
   build-depends:
+    acid-state,
     base >= 4,
     blaze-html,
     blaze-markup,
@@ -15,6 +16,8 @@ executable odor-happstack
     hamlet,
     happstack-server,
     ixset,
+    mtl,
+    safecopy,
     text,
     web-routes,
     web-routes-boomerang,
@@ -26,5 +29,6 @@ executable odor-happstack
                    Control.Util,
                    Control.Application,
                    Model.Sample,
-                   Model.IdSet
+                   Model.IdSet,
+                   Control.Actions
 

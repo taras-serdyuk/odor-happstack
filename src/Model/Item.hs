@@ -1,9 +1,11 @@
 {-# LANGUAGE DeriveDataTypeable #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
+{-# LANGUAGE TemplateHaskell #-}
 
 module Model.Item where
 
 import Data.IxSet
+import Data.SafeCopy
 import Data.Text
 import Data.Typeable
 import Text.Blaze
@@ -29,3 +31,14 @@ instance Indexable Item where
         ixFun1 getName,
         ixFun1 getStatus ] where
         ixFun1 f = ixFun $ return . f
+
+
+setStatus :: Status -> Item -> Item
+setStatus status item = item { getStatus = status }
+
+
+$(deriveSafeCopy 0 'base ''Item)
+$(deriveSafeCopy 0 'base ''ItemId)
+$(deriveSafeCopy 0 'base ''Name)
+$(deriveSafeCopy 0 'base ''Status)
+$(deriveSafeCopy 0 'base ''Description)

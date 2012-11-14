@@ -4,11 +4,15 @@
 
 module Control.Application where
 
+import Data.Acid
+import Data.Acid.Advanced
+import Data.Acid.Local
 import Data.Text
+import Control.Actions
+import Control.Exception
 import Control.Monad
 import Control.Util
 import Happstack.Server
-import Model.IdSet
 import Model.Item
 import Model.Sample
 import Model.Sitemap
@@ -21,28 +25,32 @@ type Route = RouteT Sitemap (ServerPartT IO)
 
 
 launch :: IO ()
-launch = simpleHTTP nullConf $
-    msum [site sitemap router, notFoundPage]
+launch = bracket (openLocalState initItems) createCheckpointAndClose
+    (\items -> simpleHTTP nullConf $ msum
+    [site sitemap (router items), notFoundPage])
 
 
-router :: Sitemap -> Route Response
-router url = renderUrlM >>= case url of
+router :: AcidState Items -> Sitemap -> Route Response
+router items url = renderUrlM >>= case url of
     Home -> homePage
-    Overview -> overviewPage
-    Details itemId -> detailsPage itemId
+    Overview -> overviewPage items
+    Details itemId -> detailsPage items itemId
 
 
 homePage :: RouteHandler
 homePage url = ok $ page "Home" ($(hamletFile (template "Home")) url)
 
-overviewPage :: RouteHandler
-overviewPage url = ok $ page "All Items" ($(hamletFile (template "Overview")) url)
-    where items = toList (ixSet itemSet)
+overviewPage :: AcidState Items -> RouteHandler
+overviewPage items' url = do
+    items <- query' items' GetItems
+    ok $ page "All Items" ($(hamletFile (template "Overview")) url)
 
-detailsPage :: ItemId -> RouteHandler
-detailsPage itemId url = case get itemId itemSet of
-    Just item -> ok $ page "Item Details" ($(hamletFile (template "Details")) url)
-    Nothing -> notFoundPage
+detailsPage :: AcidState Items -> ItemId -> RouteHandler
+detailsPage items itemId url = do
+    maybeItem <- query' items (GetItem itemId)
+    case maybeItem of
+        Just item -> ok $ page "Item Details" ($(hamletFile (template "Details")) url)
+        Nothing -> notFoundPage
 
 notFoundPage :: (FilterMonad Response m) => m Response
 notFoundPage = notFound $ page "Not Found" ($(shamletFile (template "NotFound")))

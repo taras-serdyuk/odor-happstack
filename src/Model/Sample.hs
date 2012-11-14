@@ -6,8 +6,8 @@ import Model.IdSet
 import Model.Item
 
 
-itemSet :: IdSet Item ItemId
-itemSet = foldr put (empty (Id 0)) [
+initItems :: IdSet Item ItemId
+initItems = foldr put (empty (Id 0)) [
     Item (Name "Item A") Free (Desc "Some description."),
     Item (Name "Item B") Free (Desc "Some description."),
     Item (Name "Item C") Free (Desc "Some description."),
