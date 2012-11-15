@@ -11,7 +11,7 @@ import Prelude hiding ((.))
 import Control.Category ((.))
 
 
-data Sitemap = Home | Overview | Details ItemId
+data Sitemap = Home | Overview | Details ItemId | Book ItemId
 
 $(derivePrinterParsers ''Sitemap)
 $(derivePrinterParsers ''ItemId)
@@ -21,4 +21,5 @@ sitemap :: Router () (Sitemap :- ())
 sitemap =
     rHome <>
     rOverview . "items" <>
-    rDetails . "item" </> rId . integer
+    rDetails . "item" </> rId . integer <>
+    rBook . "book" </> rId . integer

@@ -1,6 +1,7 @@
 .dist-buildwrapper
 dist
 cabal-dev
+state
 *.o
 *.hi
 *.chi

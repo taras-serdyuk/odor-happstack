@@ -1,3 +1,5 @@
 <p>#{getName item}
 <p>#{show $ getStatus item}
+$if getStatus item == Free
+  <p><a href=@{Book (getItemId item)}>Book</a>
 <p>#{getDesc item}

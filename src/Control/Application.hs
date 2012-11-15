@@ -25,7 +25,7 @@ type Route = RouteT Sitemap (ServerPartT IO)
 
 
 launch :: IO ()
-launch = bracket (openLocalState initItems) createCheckpointAndClose
+launch = bracket (openLocalStateFrom "../state" initItems) createCheckpointAndClose
     (\items -> simpleHTTP nullConf $ msum
     [site sitemap (router items), notFoundPage])
 
@@ -34,7 +34,8 @@ router :: AcidState Items -> Sitemap -> Route Response
 router items url = renderUrlM >>= case url of
     Home -> homePage
     Overview -> overviewPage items
-    Details itemId -> detailsPage items itemId
+    Details itemId -> detailsPage $ query' items (GetItem itemId)
+    Book itemId -> detailsPage $ update' items (BookItem itemId)
 
 
 homePage :: RouteHandler
@@ -45,10 +46,10 @@ overviewPage items' url = do
     items <- query' items' GetItems
     ok $ page "All Items" ($(hamletFile (template "Overview")) url)
 
-detailsPage :: AcidState Items -> ItemId -> RouteHandler
-detailsPage items itemId url = do
-    maybeItem <- query' items (GetItem itemId)
-    case maybeItem of
+detailsPage :: Route (Maybe Item) -> RouteHandler
+detailsPage action url = do
+    item' <- action
+    case item' of
         Just item -> ok $ page "Item Details" ($(hamletFile (template "Details")) url)
         Nothing -> notFoundPage
 
