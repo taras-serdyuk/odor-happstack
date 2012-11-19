@@ -18,7 +18,7 @@ type Items = IdSet Item ItemId
 
 
 getItems :: Query Items [Item]
-getItems = fmap (toList . ixSet) ask
+getItems = fmap (toAscList (Proxy :: Proxy Price) . ixSet) ask
 
 getItem :: ItemId -> Query Items (Maybe Item)
 getItem i = fmap (get i) ask
