@@ -1,4 +1,10 @@
 odor-happstack
 ==============
 
-Happstack App PoC
+Uses:
+* Happstack
+* Hamlet
+* Web Routes
+* Boomerang
+* IxSet
+* acid-state
